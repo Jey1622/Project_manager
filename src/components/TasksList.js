@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Table from 'react-bootstrap/Table';
 import MyVerticallyCenteredModal from './updateTask';
 import { useDispatch, useSelector } from 'react-redux'
-import { removeTaskFromList, setSelectedTask } from '../slice/tasksSlice';
+import { getTasksFromServer, removeTaskFromList, setSelectedTask } from '../slice/tasksSlice';
 
 const TasksList = () => {
     const {taskList}= useSelector((state)=>state.tasks)
@@ -14,6 +14,10 @@ const TasksList = () => {
         dispatch(setSelectedTask(task))
         setModalShow(true)
     }
+
+    useEffect(()=>{
+      dispatch(getTasksFromServer())
+    },[dispatch])
 
     const deleteTask=(task)=>{
         console.log('delete Task')
