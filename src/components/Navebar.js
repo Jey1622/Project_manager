@@ -7,7 +7,7 @@ const Navebar = () => {
   return (
     <>
     <h1 className='text-center my-4 text-primary'>Project Management</h1>
-    <p className='text-center lead'>{`currently ${taskList.length} task(s) pensing`}</p>
+    <p className='text-center lead'>{`currently ${taskList.length} task(s) pending`}</p>
     {
       (error !== '') ? <h5 className='text-center text-danger'>{error}</h5> : null
     }

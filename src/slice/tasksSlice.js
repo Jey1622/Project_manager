@@ -67,20 +67,30 @@ export const updateInServer=createAsyncThunk(
     }
 )
 
+//DELETE
+export const deleteTaskFromServer=createAsyncThunk(
+    "tasks/deleteTaskFromServerr",
+    async (task,{rejectWithValue})=>{
+        const options={
+            method:'DELETE'
+        }
+
+        const response =await fetch(BASE_URL + '/'+task.id,options)
+        if(response.ok){
+            const jsonResponse=await response.json()
+            return jsonResponse
+        }else{
+            return rejectWithValue({error:'Task Not Delete'})
+        }
+    }
+)
+
 const tasksSlice=createSlice({
     name:'taskSlice',
     initialState,
     reducers:{
-        addTaskToList:(state,action)=>{
-            const id=Math.random()*100
-            let task={...action.payload,id}
-            state.taskList.push(task)
-        },
         removeTaskFromList:(state,action)=>{
             state.taskList=state.taskList.filter((task)=>task.id !== action.payload.id)
-        },
-        updateTaskInList:(state,action)=>{
-            state.taskList=state.taskList.map((task)=>task.id===action.payload.id ? action.payload : task)
         },
         setSelectedTask:(state,action)=>{
             state.selectedTask=action.payload
@@ -122,6 +132,17 @@ const tasksSlice=createSlice({
                  state.taskList=state.taskList.map((task)=>task.id===action.payload.id ? action.payload : task)
             })
             .addCase(updateInServer.rejected,(state,action)=>{
+                state.error=action.payload.error
+                state.isLoading=false
+            })
+            .addCase(deleteTaskFromServer.pending,(state)=>{
+                state.isLoading=true
+            })
+            .addCase(deleteTaskFromServer.fulfilled,(state,action)=>{
+                state.isLoading=false
+                state.error=''
+            })
+            .addCase(deleteTaskFromServer.rejected,(state,action)=>{
                 state.error=action.payload.error
                 state.isLoading=false
             })
